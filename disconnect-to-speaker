@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# hacky script because I have problems with
+# automatically connecting to trusted bluetooth devices.
+
+echo "Connect to Speaker"
+DEVICE="37:F0:17:2F:B6:84"
+
+bluetoothctl <<EOF
+disconnect ${DEVICE}
+EOF
