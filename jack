@@ -45,6 +45,7 @@ start_jack(){
   jack_control dps rate   48000                # use cd sample rate
   jack_control dps hwmon  False                # no hardware monitoring
 
+
   # nperiods are the splitup of the
   # sound-ring-buffer. 2 are ok for internal cards
   # but for usb you should use 3 because

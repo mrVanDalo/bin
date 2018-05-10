@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+do_backup (){
+
+repository=$1
+
+restic --repo ${repository} \
+  backup \
+  /home/palo/books/ \
+  /home/palo/.gitconfig \
+  /home/palo/Ernaehrung \
+  /home/palo/.task \
+  /home/palo/.timewarrior \
+  /home/palo/.config/bugwarrior \
+  /home/palo/.config/youtube-dl \
+  /home/palo/.hpodder \
+  /home/palo/memo \
+  /home/palo/.Rack \
+  --exclude /home/palo/.Rack/plugins \
+  /home/palo/private \
+  --exclude /home/palo/private/lost+found \
+  /home/palo/music-projects/ \
+  --exclude /home/palo/music-projects/.BitwigStudio
+
+}
+
+
+backup_local () {
+  echo "backup : local"
+  do_backup /backup/restic
+}
+
+backup_usb () {
+  if [[ -d "/media/platin1/backup/restic" ]];
+  then
+    echo "backup : platin1"
+    do_backup /media/platin1/backup/restic
+  fi
+}
+
+
+backup_s3 () {
+  ping 1.1.1.1 -c 1 > /dev/null
+  result1=$?
+  ping 8.8.8.8 -c 1 > /dev/null
+  result2=$?
+  if [[ $result1 == 0  && $result2 == 0 ]]; then
+    source ~/.ssh/aws.key
+    echo "backup : s3"
+    do_backup s3:s3.amazonaws.com/${AWS_BACKUP_TARGET}
+  fi
+}
+
+
+
+backup_local
+backup_usb
+backup_s3
+
