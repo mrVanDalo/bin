@@ -6,14 +6,20 @@ repository=$1
 
 restic --repo ${repository} \
   backup \
-  /home/palo/books/ \
+  /etc/wpa_supplicant.conf \
+  /home/palo/.ssh \
+  /home/palo/.gnupg \
   /home/palo/.gitconfig \
-  /home/palo/Ernaehrung \
+  /home/palo/.password-store \
+  /home/palo/finance \
+  /home/palo/deployment \
   /home/palo/.task \
   /home/palo/.timewarrior \
   /home/palo/.config/bugwarrior \
   /home/palo/.config/youtube-dl \
   /home/palo/.hpodder \
+  /home/palo/books/ \
+  /home/palo/Ernaehrung \
   /home/palo/memo \
   /home/palo/.Rack \
   --exclude /home/palo/.Rack/plugins \

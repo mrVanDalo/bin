@@ -7,8 +7,8 @@ TIMESTAMP=`date +%Y-%m-%d`
 # remove trailing slash
 SOURCE=${1%/}
 PROJECT_NAME=${2%/}
-TARGET="${HOME}/audio/projects/OP-1/${TIMESTAMP}_${PROJECT_NAME}"
-SNAPSHOT_DB="${HOME}/audio/projects/OP-1_Database"
+TARGET="${HOME}/music-projects/OP-1/${TIMESTAMP}_${PROJECT_NAME}"
+SNAPSHOT_DB="${HOME}/music-projects/OP-1_Database"
 
 # todo : make sure spaces can be used in folder names
 # todo : ask if side_a and side_b should be copied
