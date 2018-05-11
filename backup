@@ -30,22 +30,17 @@ restic --repo ${repository} \
 
 }
 
-
 backup_local () {
-  echo "backup : local"
-  do_backup /backup/restic
-}
-
-backup_usb () {
-  if [[ -d "/media/platin1/backup/restic" ]];
+  local usb=$1
+  if [[ -d ${usb} ]];
   then
-    echo "backup : platin1"
-    do_backup /media/platin1/backup/restic
+    echo "backup : ${usb}"
+    do_backup ${usb}
   fi
 }
 
-
 backup_s3 () {
+  local target=$1
   ping 1.1.1.1 -c 1 > /dev/null
   result1=$?
   ping 8.8.8.8 -c 1 > /dev/null
@@ -53,13 +48,15 @@ backup_s3 () {
   if [[ $result1 == 0  && $result2 == 0 ]]; then
     source ~/.ssh/aws.key
     echo "backup : s3"
-    do_backup s3:s3.amazonaws.com/${AWS_BACKUP_TARGET}
+    do_backup s3:s3.amazonaws.com/${target}
   fi
 }
 
 
 
-backup_local
-backup_usb
-backup_s3
+backup_local /backup/restic
+backup_local /media/platin1/backup/restic
+backup_local /media/frog1/backup/restic
+
+backup_s3    backup-private-palo-de/restic
 
