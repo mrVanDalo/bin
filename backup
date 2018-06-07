@@ -19,7 +19,7 @@ restic --repo ${repository} \
   /home/palo/.config/youtube-dl \
   /home/palo/.hpodder \
   /home/palo/books/ \
-  /home/palo/Ernaehrung \
+  /home/palo/Sport \
   /home/palo/memo \
   /home/palo/.Rack \
   --exclude /home/palo/.Rack/plugins \
@@ -52,11 +52,22 @@ backup_s3 () {
   fi
 }
 
+backup_kruck() {
+  local target=$1
+  ping kruck -c 1 > /dev/null
+  result1=$?
+  if [[ $result1 == 0  ]]; then
+    echo "backup : kruck"
+    do_backup sftp:root@kruck.private:${target}
+  fi
+}
 
 
 backup_local /backup/restic
 backup_local /media/platin1/backup/restic
 backup_local /media/frog1/backup/restic
+
+backup_kruck /home/backup/workhorse
 
 backup_s3    backup-private-palo-de/restic
 
