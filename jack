@@ -1,20 +1,10 @@
 #!/usr/bin/env bash
-#
-#     $$$$$\                     $$\        $$$$$$\
-#     \__$$ |                    $$ |      $$  __$$\
-#        $$ | $$$$$$\   $$$$$$$\ $$ |  $$\ \__/  $$ |
-#        $$ | \____$$\ $$  _____|$$ | $$  | $$$$$$  |
-#  $$\   $$ | $$$$$$$ |$$ /      $$$$$$  / $$  ____/
-#  $$ |  $$ |$$  __$$ |$$ |      $$  _$$<  $$ |
-#  \$$$$$$  |\$$$$$$$ |\$$$$$$$\ $$ | \$$\ $$$$$$$$\
-#   \______/  \_______| \_______|\__|  \__|\________|
-#
 
 set -e
 
 start_jack(){
 
-  internal_device_number=0
+  internal_device_number=-1
   komplete_device_number=`aplay -l | grep Vestax | cut -d":" -f1 | cut -d" " -f2`
   babyface_device_number=`aplay -l | grep Babyface | cut -d":" -f1 | cut -d" " -f2`
   h2n_device_number=`aplay -l | grep H2n | cut -d":" -f1 | cut -d" " -f2`
@@ -39,11 +29,18 @@ start_jack(){
   #
   # to find configuration options do
   # jack_control dp
-  jack_control ds  alsa
-  jack_control dps device hw:${device_number}  # use usb card
-  jack_control dps duplex True                 # record and playback ports
+  if [[ $internal_device_number -eq -1 ]]
+  then
+    jack_control ds dummy
+    jack_control ds pulse
+  else
+    jack_control ds  alsa
+    jack_control dps device hw:${device_number}  # use usb card
+    jack_control dps duplex True                 # record and playback ports
+    jack_control dps hwmon  False                # no hardware monitoring
+  fi
+
   jack_control dps rate   48000                # use cd sample rate
-  jack_control dps hwmon  False                # no hardware monitoring
 
 
   # nperiods are the splitup of the
@@ -51,7 +48,10 @@ start_jack(){
   # but for usb you should use 3 because
   # you can have to write in junks to the card
   # so there is one backup slice in the middle
-  jack_control dps nperiods 3
+  if [[ $internal_device_number -ne -1 ]]
+  then
+    jack_control dps nperiods 3
+  fi
 
   # engine parameter configuration
   # ==============================
@@ -84,6 +84,8 @@ case $1 in
   start) start_jack
     ;;
   stop) stop_jack
+    ;;
+  restart) stop_jack ; start_jack
     ;;
   *) status_jack
     ;;
