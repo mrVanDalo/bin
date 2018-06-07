@@ -31,15 +31,17 @@ start_jack(){
   # jack_control dp
   if [[ $internal_device_number -eq -1 ]]
   then
-    jack_control ds dummy
+    # we use alsa in reality, but pulse opens up all the pulse
+    # sink and source stuff
     jack_control ds pulse
+    jack_control dps device hw:0
   else
     jack_control ds  alsa
     jack_control dps device hw:${device_number}  # use usb card
-    jack_control dps duplex True                 # record and playback ports
-    jack_control dps hwmon  False                # no hardware monitoring
   fi
 
+  jack_control dps duplex True                 # record and playback ports
+  jack_control dps hwmon  False                # no hardware monitoring
   jack_control dps rate   48000                # use cd sample rate
 
 
