@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+first=$1
+second=$2
+
+if [[ $# -ne 2 ]]
+then
+  echo "need 2 arguments"
+  exit 1
+fi
+
+pass bank/ingdiba/security_key | cut -c${first},${second}
